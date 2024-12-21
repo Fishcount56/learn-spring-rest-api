@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,28 +28,32 @@ public class UserController {
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<Object> register(@RequestBody @Valid RegisterUserRequest request) {
+    public ResponseEntity<WebResponse<Object>> register(@RequestBody @Valid RegisterUserRequest request) {
         try {
             UserEntity registeredUser = userService.register(request);
 
-            return WebResponse.builder()
-                .status(HttpStatus.OK.value())
-                .message("OK")
-                .data(Map.of(
-                    "users_id", registeredUser.getUsers_id(),
-                    "username", registeredUser.getUsername()
-                ))
-                .errors(null)
-                .build();
+            return ResponseEntity.status(HttpStatus.OK.value())
+                .body(WebResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message("OK")
+                    .data(Map.of(
+                        "users_id", registeredUser.getUsers_id(),
+                        "username", registeredUser.getUsername()
+                    ))
+                    .errors(null)
+                    .build()
+                );
         } catch (Exception e) {
-            return WebResponse.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message("Internal Server Error")
-                .data(null)
-                .errors(Map.of(
-                    "message", e.getMessage()
-                ))
-                .build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .body(WebResponse.builder()
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                        .message("Internal Server Error")
+                        .data(null)
+                        .errors(Map.of(
+                            "message", e.getMessage()
+                        ))
+                        .build()
+                    );
         }
     }
 }

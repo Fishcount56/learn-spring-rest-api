@@ -23,11 +23,11 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                     .body(WebResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .data(null)
-                    .errors(errors)
-                    .build());
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .data(null)
+                        .errors(errors)
+                        .build());
     }
 }
